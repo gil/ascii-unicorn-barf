@@ -8,6 +8,23 @@ const createSettingsPanel = (() => {
     return (String(step).split(".")[1] || "").length;
   }
 
+  async function copyText(text) {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return;
+      }
+    } catch (_) { /* fall through to legacy path */ }
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); } catch (_) { /* nothing else to try */ }
+    document.body.removeChild(ta);
+  }
+
   function randomValue(ctrl) {
     if (ctrl.type === "select") {
       return ctrl.options[Math.floor(Math.random() * ctrl.options.length)].value;
@@ -127,6 +144,8 @@ const createSettingsPanel = (() => {
     const onResetCb = callbacks.onReset || (() => {});
     const refreshers = [];
     const randomizable = [];
+    const tracked = [];
+    const initials = new Map();
 
     const refreshAll = () => refreshers.forEach((fn) => fn());
     const onChange = (ctrl) => {
@@ -147,12 +166,16 @@ const createSettingsPanel = (() => {
     header.innerHTML = "<span>Parameters</span>";
     const actions = document.createElement("div");
     actions.className = "settings-actions";
+    const copyBtn = document.createElement("button");
+    copyBtn.className = "settings-btn";
+    copyBtn.textContent = "Copy";
     const randomBtn = document.createElement("button");
     randomBtn.className = "settings-btn";
     randomBtn.textContent = "Randomize";
     const resetBtn = document.createElement("button");
     resetBtn.className = "settings-btn";
     resetBtn.textContent = "Reset";
+    actions.appendChild(copyBtn);
     actions.appendChild(randomBtn);
     actions.appendChild(resetBtn);
     header.appendChild(actions);
@@ -170,6 +193,8 @@ const createSettingsPanel = (() => {
         else if (ctrl.type === "checkbox") row = buildCheckbox(ctrl, refreshers, onChange);
         else row = buildRange(ctrl, refreshers, onChange);
         if (ctrl.type !== "checkbox") randomizable.push(ctrl);
+        tracked.push(ctrl);
+        initials.set(ctrl, ctrl.obj[ctrl.key]);
         section.appendChild(row);
       }
       panel.appendChild(section);
@@ -184,6 +209,18 @@ const createSettingsPanel = (() => {
       for (const ctrl of randomizable) ctrl.obj[ctrl.key] = randomValue(ctrl);
       for (const ctrl of randomizable) if (ctrl.resize) onChangeCb(ctrl);
       refreshAll();
+    });
+
+    copyBtn.addEventListener("click", async () => {
+      const changed = {};
+      for (const ctrl of tracked) {
+        const cur = ctrl.obj[ctrl.key];
+        if (cur !== initials.get(ctrl)) changed[ctrl.key] = cur;
+      }
+      await copyText(JSON.stringify(changed, null, 2));
+      const prev = copyBtn.textContent;
+      copyBtn.textContent = Object.keys(changed).length ? "Copied!" : "No changes";
+      setTimeout(() => { copyBtn.textContent = prev; }, 1200);
     });
 
     toggle.addEventListener("click", () => {
