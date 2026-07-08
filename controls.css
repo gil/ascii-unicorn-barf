@@ -53,7 +53,11 @@
   letter-spacing: 0.03em;
   color: #fff;
 }
-.settings-reset {
+.settings-actions {
+  display: flex;
+  gap: 6px;
+}
+.settings-btn {
   border: 1px solid #333;
   background: transparent;
   color: #bbb;
@@ -62,7 +66,7 @@
   border-radius: 6px;
   cursor: pointer;
 }
-.settings-reset:hover { background: #222; color: #fff; }
+.settings-btn:hover { background: #222; color: #fff; }
 
 .settings-group { margin-top: 10px; }
 .settings-group h3 {

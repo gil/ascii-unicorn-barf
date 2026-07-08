@@ -8,6 +8,16 @@ const createSettingsPanel = (() => {
     return (String(step).split(".")[1] || "").length;
   }
 
+  function randomValue(ctrl) {
+    if (ctrl.type === "select") {
+      return ctrl.options[Math.floor(Math.random() * ctrl.options.length)].value;
+    }
+    const steps = Math.round((ctrl.max - ctrl.min) / ctrl.step);
+    const n = Math.floor(Math.random() * (steps + 1));
+    const decimals = decimalsOf(ctrl.step);
+    return parseFloat((ctrl.min + n * ctrl.step).toFixed(decimals));
+  }
+
   function buildRange(ctrl, refreshers, onChange) {
     const row = document.createElement("label");
     row.className = "settings-row";
@@ -116,6 +126,7 @@ const createSettingsPanel = (() => {
     const onChangeCb = callbacks.onChange || (() => {});
     const onResetCb = callbacks.onReset || (() => {});
     const refreshers = [];
+    const randomizable = [];
 
     const refreshAll = () => refreshers.forEach((fn) => fn());
     const onChange = (ctrl) => {
@@ -134,10 +145,17 @@ const createSettingsPanel = (() => {
     const header = document.createElement("div");
     header.className = "settings-header";
     header.innerHTML = "<span>Parameters</span>";
+    const actions = document.createElement("div");
+    actions.className = "settings-actions";
+    const randomBtn = document.createElement("button");
+    randomBtn.className = "settings-btn";
+    randomBtn.textContent = "Randomize";
     const resetBtn = document.createElement("button");
-    resetBtn.className = "settings-reset";
+    resetBtn.className = "settings-btn";
     resetBtn.textContent = "Reset";
-    header.appendChild(resetBtn);
+    actions.appendChild(randomBtn);
+    actions.appendChild(resetBtn);
+    header.appendChild(actions);
     panel.appendChild(header);
 
     for (const group of sections) {
@@ -151,6 +169,7 @@ const createSettingsPanel = (() => {
         if (ctrl.type === "select") row = buildSelect(ctrl, refreshers, onChange);
         else if (ctrl.type === "checkbox") row = buildCheckbox(ctrl, refreshers, onChange);
         else row = buildRange(ctrl, refreshers, onChange);
+        if (ctrl.type !== "checkbox") randomizable.push(ctrl);
         section.appendChild(row);
       }
       panel.appendChild(section);
@@ -158,6 +177,12 @@ const createSettingsPanel = (() => {
 
     resetBtn.addEventListener("click", () => {
       onResetCb();
+      refreshAll();
+    });
+
+    randomBtn.addEventListener("click", () => {
+      for (const ctrl of randomizable) ctrl.obj[ctrl.key] = randomValue(ctrl);
+      for (const ctrl of randomizable) if (ctrl.resize) onChangeCb(ctrl);
       refreshAll();
     });
 
