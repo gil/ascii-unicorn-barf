@@ -2,6 +2,10 @@
 const fx = new FluidAscii(".ambient-canvas");
 const c = fx.config;
 
+// Idle demo (app-only, not part of the lib).
+const demo = new DemoCursor();
+const demoState = { enabled: demo.enabled };
+
 const sections = [
   {
     title: "Fluid",
@@ -51,8 +55,17 @@ const sections = [
       { obj: c, key: "colorHue", label: "Fixed hue", min: 0, max: 360, step: 5, enabledWhen: () => c.colorMode === "fixed" },
     ],
   },
+  {
+    title: "Demo",
+    controls: [
+      { type: "checkbox", obj: demoState, key: "enabled", label: "Play when idle" },
+    ],
+  },
 ];
 
 createSettingsPanel(sections, {
+  onChange: (ctrl) => {
+    if (ctrl.obj === demoState) demo.setEnabled(demoState.enabled);
+  },
   onReset: () => fx.reset(),
 });

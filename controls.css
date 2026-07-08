@@ -116,6 +116,13 @@
   cursor: pointer;
 }
 
+.settings-checkbox {
+  width: 15px;
+  height: 15px;
+  accent-color: #e8e4df;
+  cursor: pointer;
+}
+
 .settings-select {
   background: #1c1c1c;
   color: #ddd;

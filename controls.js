@@ -53,6 +53,33 @@ const createSettingsPanel = (() => {
     return row;
   }
 
+  function buildCheckbox(ctrl, refreshers, onChange) {
+    const row = document.createElement("label");
+    row.className = "settings-row";
+    const head = document.createElement("div");
+    head.className = "settings-rowhead";
+    const name = document.createElement("span");
+    name.className = "settings-label";
+    name.textContent = ctrl.label;
+
+    const box = document.createElement("input");
+    box.type = "checkbox";
+    box.className = "settings-checkbox";
+    head.appendChild(name);
+    head.appendChild(box);
+    row.appendChild(head);
+
+    const sync = () => { box.checked = !!ctrl.obj[ctrl.key]; };
+    sync();
+    refreshers.push(sync);
+
+    box.addEventListener("change", () => {
+      ctrl.obj[ctrl.key] = box.checked;
+      onChange(ctrl);
+    });
+    return row;
+  }
+
   function buildSelect(ctrl, refreshers, onChange) {
     const row = document.createElement("label");
     row.className = "settings-row";
@@ -120,9 +147,10 @@ const createSettingsPanel = (() => {
       h.textContent = group.title;
       section.appendChild(h);
       for (const ctrl of group.controls) {
-        const row = ctrl.type === "select"
-          ? buildSelect(ctrl, refreshers, onChange)
-          : buildRange(ctrl, refreshers, onChange);
+        let row;
+        if (ctrl.type === "select") row = buildSelect(ctrl, refreshers, onChange);
+        else if (ctrl.type === "checkbox") row = buildCheckbox(ctrl, refreshers, onChange);
+        else row = buildRange(ctrl, refreshers, onChange);
         section.appendChild(row);
       }
       panel.appendChild(section);
