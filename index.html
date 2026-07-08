@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fluid ASCII</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+    }
+    .ambient-canvas {
+      position: fixed;
+      inset: 0;
+      display: block;
+      width: 100vw;
+      height: 100vh;
+    }
+    .hint {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%);
+      color: #555;
+      font: 400 13px "Courier New", monospace;
+      letter-spacing: 0.08em;
+      pointer-events: none;
+      user-select: none;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+  <canvas class="ambient-canvas"></canvas>
+  <div class="hint">move the mouse &middot; click to ripple</div>
+  <script src="fluid.js"></script>
+</body>
+</html>
