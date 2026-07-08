@@ -106,3 +106,7 @@ The idle demo (`demo.js`) simulates a wandering cursor by dispatching synthetic
 pointer events, which the lib treats like a real mouse. Those events carry
 `isTrusted: false`, so any real input pauses the demo at once, and it resumes
 once the pointer leaves the page. Toggle it under **Demo → Play when idle**.
+
+## License
+
+[MIT](LICENSE) © 2026 Andre Gil
