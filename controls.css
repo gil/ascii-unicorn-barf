@@ -13,10 +13,11 @@
   line-height: 1;
   cursor: pointer;
   backdrop-filter: blur(8px);
-  transition: background 0.15s ease, transform 0.15s ease, color 0.15s ease;
+  transition: background 0.15s ease, transform 0.15s ease, color 0.15s ease, opacity 0.25s ease;
 }
 .settings-toggle:hover { background: rgba(38, 38, 38, 0.85); color: #fff; }
 .settings-toggle.active { color: #fff; transform: rotate(45deg); }
+.settings-toggle.hidden { opacity: 0; pointer-events: none; }
 
 .settings-panel {
   position: fixed;

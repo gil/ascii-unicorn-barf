@@ -69,3 +69,38 @@ createSettingsPanel(sections, {
   },
   onReset: () => fx.reset(),
 });
+
+// After the first real click: drop the hint for good, and let the menu button
+// auto-hide — it reappears on mouse move, hides when the pointer leaves the page.
+(function setupIdleChrome() {
+  const hint = document.querySelector(".hint");
+  const toggleBtn = document.querySelector(".settings-toggle");
+  const panel = document.querySelector(".settings-panel");
+  let engaged = false;
+
+  const showButton = () => toggleBtn.classList.remove("hidden");
+  const hideButton = () => {
+    if (panel && panel.classList.contains("open")) return; // keep visible while menu open
+    toggleBtn.classList.add("hidden");
+  };
+
+  window.addEventListener("pointerdown", (e) => {
+    if (!e.isTrusted || engaged) return;
+    engaged = true;
+    if (hint) {
+      hint.style.transition = "opacity 0.4s ease";
+      hint.style.opacity = "0";
+      setTimeout(() => hint.remove(), 400);
+    }
+    hideButton();
+  }, true);
+
+  window.addEventListener("pointermove", (e) => {
+    if (e.isTrusted && engaged) showButton();
+  }, true);
+
+  document.addEventListener("mouseleave", () => { if (engaged) hideButton(); });
+  document.addEventListener("mouseout", (e) => {
+    if (engaged && !e.relatedTarget && !e.toElement) hideButton();
+  });
+})();
