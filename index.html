@@ -32,10 +32,17 @@
       z-index: 2;
     }
   </style>
+  <link rel="stylesheet" href="controls.css" />
 </head>
 <body>
   <canvas class="ambient-canvas"></canvas>
   <div class="hint">move the mouse &middot; click to ripple</div>
-  <script src="fluid.js"></script>
+
+  <!-- lib: the whole engine in one class -->
+  <script src="fluid-ascii.js"></script>
+  <!-- UI: generic settings panel -->
+  <script src="controls.js"></script>
+  <!-- app: instantiate + bind panel -->
+  <script src="app.js"></script>
 </body>
 </html>
