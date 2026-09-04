@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SolAscii3D</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #05070d; overflow: hidden; }
+</style>
+</head>
+<body>
+  <script type="module">
+    import { SolAscii3D } from './sol-ascii-3d.js';
+    import { mountControlPanel } from './sol-ascii-3d-panel.js';
+
+    // Zero-config: creates its own DOM and mounts full-viewport.
+    const hero = new SolAscii3D();
+    mountControlPanel(hero);
+  </script>
+</body>
+</html>
