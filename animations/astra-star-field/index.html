@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Astra Star Field</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #05070d; overflow: hidden; }
+  .hint {
+    position: fixed; left: 0; right: 0; bottom: 26px; z-index: 10;
+    text-align: center; pointer-events: none;
+    font: 400 12px/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.4);
+    transition: opacity 700ms ease;
+  }
+  .hint.is-hidden { opacity: 0; }
+  @media (prefers-reduced-motion: reduce) { .hint { transition: none; } }
+</style>
+</head>
+<body>
+  <p class="hint" id="hint">drag to rotate &nbsp;·&nbsp; scroll or 1&thinsp;2&thinsp;3 to change shape</p>
+  <script type="module">
+    import { AstraStarField } from './astra-star-field.js';
+    import { mountControlPanel } from './astra-star-field-panel.js';
+
+    // Zero-config: creates its own DOM and mounts full-viewport.
+    const hero = new AstraStarField();
+    mountControlPanel(hero);
+
+    const hint = document.getElementById('hint');
+    hero.host.addEventListener('astra:interact', () => hint.classList.add('is-hidden'), { once: true });
+    setTimeout(() => hint.classList.add('is-hidden'), 9000);
+  </script>
+</body>
+</html>

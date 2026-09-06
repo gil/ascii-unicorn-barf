@@ -12,11 +12,13 @@ Open `index.html` at the root for the list, then click through.
 | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
 | [ASCII Unicorn Barf 🦄](animations/ascii-unicorn-barf/)   | GPU fluid simulation painted as colorful ASCII. Mouse paints trails, clicks send out ripples. |
 | [Sol ASCII 3D](animations/sol-ascii-3d/)                  | A 3D solar system of spinning glyph-rendered bodies, with an orbit mode.                       |
+| [Astra Star Field](animations/astra-star-field/)          | Glowing stars morphing between a spiral 6, a cursor, and a knot. Drag to rotate. Has an ASCII mode. |
 
 ## Running it
 
-Serve the repo root. Sol ASCII 3D uses ES modules and a CDN import, so `file://`
-will not work for it.
+Serve the repo root. Sol ASCII 3D and Astra Star Field use ES modules, so
+`file://` will not work for them. Sol ASCII 3D also pulls three.js from a CDN, so
+it needs to be online.
 
 ```sh
 python3 -m http.server
